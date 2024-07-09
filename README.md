@@ -2,7 +2,7 @@
 
 ## Introduction
 
-FinanceApp-BE is a personal project created for studying and developing an application to control investments. The backend service provides functionalities to manage and track financial investments efficiently.
+FinanceApp-BE is a backend service for managing and tracking financial investments, created for learning and development purposes.
 
 ## Table of Contents
 
@@ -12,15 +12,13 @@ FinanceApp-BE is a personal project created for studying and developing an appli
 - [Features](#features)
 - [Dependencies](#dependencies)
 - [Configuration](#configuration)
-- [Documentation](#documentation)
-- [Examples](#examples)
+- [Modules](#modules)
+- [Project Structure](#project-structure)
 - [Troubleshooting](#troubleshooting)
 - [Contributors](#contributors)
 - [License](#license)
 
 ## Installation
-
-To install the FinanceApp-BE, follow these steps:
 
 1. Clone the repository:
     ```sh
@@ -30,47 +28,74 @@ To install the FinanceApp-BE, follow these steps:
     ```sh
     cd FinanceApp-BE
     ```
-3. Install the necessary dependencies using your preferred package manager.
+3. Install dependencies:
+    ```sh
+    dotnet restore
+    ``## Usage
 
-## Usage
-
-Run the application using the following command:
-```sh
-dotnet run
-```
-Make sure to adjust configuration files as needed for your development environment.
+1. Update `appsettings.json`.
+2. Run the application:
+    ```sh
+    dotnet run
+    ```
 
 ## Features
 
-- Track and manage financial investments
-- Record and update investment data
-- Generate reports on investment performance
+- Manage financial investments
+- CRUD operations for investment data
+- Generate performance reports
+- User authentication and authorization
 
 ## Dependencies
 
 - .NET Core SDK
 - Entity Framework Core
+- SQL Server
 
 ## Configuration
 
-Configuration settings are located in the `appsettings.json` and `appsettings.Development.json` files. Adjust these files according to your environment.
+Update the `appsettings.json` file with your configuration settings:
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "YourConnectionStringHere"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information"
+    }
+  }
+}
+```
 
-## Documentation
+## Modules
 
-Additional documentation can be found within the codebase, particularly in the `Controllers`, `Models`, and `UseCase` directories.
+### User Module
 
+- **Controller**: Manages user endpoints (register, login, profile).
+- **Model**: Defines user properties (Id, Username, PasswordHash, Email, CreatedAt).
+- **Repository**: Handles data access (Register, Authenticate, GetById).
+- **UseCase**: Contains business logic (ExecuteRegister, ExecuteAuthenticate, ExecuteGetProfile).
+
+## Project Structure
+
+- **Controllers**: Contains API controllers for handling HTTP requests. Example: `UserController`.
+- **Models**: Defines the data structures used in the application. Example: `User`.
+- **Repositories**: Contains classes for data access logic. Example: `UserRepository`.
+- **UseCase**: Contains business logic for different operations. Example: `UserUseCase`.
+- **Migrations**: Stores database migration files.
+- **Properties**: Contains configuration files such as `launchSettings.json`.
 
 ## Troubleshooting
 
-If you encounter issues:
-- Ensure all dependencies are correctly installed.
-- Verify configuration settings.
-- Check the logs for detailed error messages.
+- Ensure the .NET Core SDK is installed.
+- Verify your database connection string in `appsettings.json`.
+- Check the application logs for error details.
 
 ## Contributors
 
-- Juanormelli - [GitHub Profile](https://github.com/Juanormelli)
+- [Juanormelli](https://github.com/Juanormelli)
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](https://github.com/Juanormelli/FinanceApp-BE/blob/master/LICENSE.txt) file for more details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/Juanormelli/FinanceApp-BE/blob/master/LICENSE.txt) file for details.
