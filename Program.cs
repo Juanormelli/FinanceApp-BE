@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,8 @@ builder.Services.AddAuthentication(x =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<FinanceContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("Myconn"), x => x.UseDateOnlyTimeOnly()));
+
+builder.Services.AddDistributedRedisCache(opt => { opt.Configuration = "192.168.3.132:6379, password=2b31ce6b3b2666ade070833e173bc4e1ce90396f77c30b7b933025982fcfa787"; } );
 
 
 var app = builder.Build();
