@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="ErikEJ.EntityFrameworkCore.SqlServer.DateOnlyTimeOnly" Version="6.0.0" />
+    <PackageReference Include="Handlebars.Net.Helpers" Version="2.4.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.1" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />

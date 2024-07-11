@@ -3,19 +3,12 @@ using Finance.Repository;
 using Finance.Services;
 using Finance.UseCase;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.IdentityModel.Tokens;
-using System.Runtime.CompilerServices;
 
 namespace Finance.Controllers
 {
-  public class IRequest
-  {
-    public string passwd;
-    public string userEmail;
-  }
 
   [Route("api/[controller]")]
   [ApiController]
@@ -101,13 +94,10 @@ namespace Finance.Controllers
         tokenCache.UserId = user.UserEmail.Trim();
 
         _tokenService.SaveRefreshToken(tokenCache);
-
-        return new
-        {
-          user = user.UserEmail,
-          token = token,
-          refreshToken = refreshToken,
-        };
+        Response.Cookies.Append("X-Access-Token", token, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
+        Response.Cookies.Append("X-Username", usr.UserEmail.Trim(), new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
+        Response.Cookies.Append("X-Refresh-Token", refreshToken, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
+        return Ok();
 
 
       }catch(Exception ex)
@@ -121,14 +111,15 @@ namespace Finance.Controllers
     [HttpPost]
     [Route("Refresh")]
 
-    public async Task<dynamic> Refresh([FromBody] RefreshTokenRequest refreshTokenRequest)
+    public async Task<dynamic> Refresh()
     {
 
-      var principal = _tokenService.GetPrincipalFromExpiredToken(refreshTokenRequest.Token);
+      var principal = _tokenService.GetPrincipalFromExpiredToken(Request.Cookies["X-Access-Token"]);
+      var exp = principal.Claims.Where(x => x.Type == "exp").FirstOrDefault();
       var userId = principal.Identity.Name.Trim();
       var savedRefreshToken = await _tokenService.GetRefreshToken(userId);
 
-      if (savedRefreshToken != refreshTokenRequest.RefreshToken) 
+      if (savedRefreshToken != Request.Cookies["X-Refresh-Token"]) 
       {
         throw new SecurityTokenException("Token Invalido");
       }
@@ -141,12 +132,13 @@ namespace Finance.Controllers
       jwtToken.Token = newRefreshToken;
       jwtToken.UserId = userId;
       _tokenService.SaveRefreshToken(jwtToken);
-      
-      return new
-      {
-        token = newToken,
-        refreshToken = newRefreshToken
-      };
+
+      Response.Cookies.Append("X-Access-Token", newToken, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
+      Response.Cookies.Append("X-Username", userId, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
+      Response.Cookies.Append("X-Refresh-Token", newRefreshToken, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
+
+      return Ok();
+
     }
   }
 }

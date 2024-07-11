@@ -23,6 +23,14 @@ builder.Services.AddAuthentication(x =>
   x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(x =>
 {
+  x.Events = new JwtBearerEvents
+  {
+    OnMessageReceived = context =>
+    {
+      context.Token = context.Request.Cookies["X-Access-Token"];
+      return Task.CompletedTask;
+    }
+  };
   x.RequireHttpsMetadata = false;
   x.SaveToken = true;
   x.TokenValidationParameters = new TokenValidationParameters
