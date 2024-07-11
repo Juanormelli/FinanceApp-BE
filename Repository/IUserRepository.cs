@@ -6,5 +6,7 @@ namespace Finance.Repository
   {
     public string CreateUser(User users);
     public User SelectUserById(string email);
+
+    public User ValidateLogin(string email, string passwd);
   }
 }

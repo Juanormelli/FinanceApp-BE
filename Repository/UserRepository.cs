@@ -1,4 +1,6 @@
 ﻿using Finance.Models;
+using Finance.Services;
+using System.Runtime.CompilerServices;
 
 namespace Finance.Repository
 {
@@ -6,9 +8,11 @@ namespace Finance.Repository
   {
     // Injeção de dependencia
     private  FinanceContext _context;
+    private PasswdHash _passwdHash;
     public UserRepository(FinanceContext context) 
     {
       _context = context;
+      _passwdHash = new PasswdHash();
     }
 
     public string CreateUser(User users)
@@ -31,6 +35,29 @@ namespace Finance.Repository
 
       return user;
     }
+    public User ValidateLogin(string email, string passwd)
+    {
+      User user = new User();
 
+
+      user = _context.Users.FirstOrDefault(x => x.UserEmail == email);
+
+     
+
+      if (user == null)
+      {
+        return null;
+      }
+
+      bool validatePasswd = _passwdHash.VerifyPassHash(passwd, user.UserPasswd);
+      
+      if(validatePasswd)
+      {
+        return user;
+      }
+
+      return null;
+
+    }
   }
 }
